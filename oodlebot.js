@@ -52,7 +52,7 @@ client.on('message', message => {
 		replace = "Oodle";
 		reply = true;
 	}
-	else if (/^!oodleauto\s+(.*)?/i.test(message.content)) {
+	/*else if (/^!oodleauto\s+(.*)?/i.test(message.content)) {
 		// this one is more complicated, and does not use the reply function below
 		reply = false;
 		var msg = message.content.replace(/^!oodleauto/i, "");
@@ -63,13 +63,13 @@ client.on('message', message => {
 			message.channel.sendMessage(":warning: Nothing there to oodle. (!oodlehelp for more info)");
 		} else
 			message.channel.sendMessage(msg.trim());
-	}
+	}*/
 	else if (/^!oodleinvite/i.test(message.content)) {
 		message.author.sendMessage(`Invite link:\nhttps://discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot&permissions=${7168}`);
 	}
 
 	else if (/^!oodlehelp/i.test(message.content)) {
-		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleauto <Message>\n  replaces every vowel, guessing between 'Oodle', 'oodle', and 'OODLE'. (Experimental)\n!oodleinvite\n  messages you the invite link for the bot\n```");
+		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n```");
 	}
 
 	if (reply) {
