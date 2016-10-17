@@ -37,24 +37,36 @@ client.on('message', message => {
 	var pattern = /[aeiou]/ig;
 	var replacement = "oodle";
 	var command = "!oodle";
-	if (/^!oodle\s+/i.test(message.content)) {
+	if (/^!oodle(\s+.*)?/i.test(message.content)) {
 		// the default parameters above handle this case, so just true
 		reply = true;
 	}
-	else if (/^!oodlecaps\s+/i.test(message.content)) {
+	else if (/^!oodlecaps(\s+.*)?/i.test(message.content)) {
 		// pattern still works, as with all of these
 		command = "!oodlecaps";
 		replace = "OODLE";
 		reply = true;
 	}
-	else if (/^!oodletitle\s+/i.test(message.content)) {
+	else if (/^!oodletitle(\s+.*)?/i.test(message.content)) {
 		command = "!oodletitle";
 		replace = "Oodle";
 		reply = true;
 	}
+	else if (/^!oodleauto(\s+.*)?/i.test(message.content)) {
+		// this one is more complicated, and does not use the reply function below
+		reply = false;
+		var msg = message.content.replace(/^!oodleauto/i, "");
+		msg = msg.replace(/[aeiou]/g, "oodle")
+				.replace(/[AEIOU](?=[a-z])/g, "Oodle")
+				.replace(/[AEIOU](?!=[a-z])/g, "OODLE");
+		if (!/oodle/i.test(msg)) {
+			message.channel.sendMessage(":warning: Nothing there to oodle. (!oodlehelp for more info)");
+		} else
+			message.channel.sendMessage(msg.trim());
+	}
 
-	else if (/^!help/i.test(message.content)) {
-		message.author.sendMessage("Here are the things I can do for you:\n```\n  - !oodle <message>\n    replaces every vowel in <message> with 'oodle'\n  - !oodlecaps <MESSAGE>\n    replaces every vowel in <MESSAGE> with 'OODLE'\n  - !oodletitle <Message>\n    replaces every vowel in <Message> with 'Oodle'\n```");
+	else if (/^!oodlehelp/i.test(message.content)) {
+		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleauto <Message>\n  replaces every vowel, guessing between 'Oodle', 'oodle', and 'OODLE'. (Experimental)\n```");
 	}
 
 	if (reply) {
@@ -63,9 +75,9 @@ client.on('message', message => {
 		console.log(msg);
 		msg = msg.replace(pattern, replacement);
 		if (!/oodle/i.test(msg))
-			message.reply("Nothing there to oodle. (!help for more info)");
+			message.channel.sendMessage(":warning: Nothing there to oodle. (!oodlehelp for more info)");
 		else
-			message.reply(msg.trim());
+			message.channel.sendMessage(msg.trim());
 	}
 });
 
