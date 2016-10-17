@@ -37,22 +37,22 @@ client.on('message', message => {
 	var pattern = /[aeiou]/ig;
 	var replacement = "oodle";
 	var command = "!oodle";
-	if (/^!oodle(\s+.*)?/i.test(message.content)) {
+	if (/^!oodle\s+(.*)?/i.test(message.content)) {
 		// the default parameters above handle this case, so just true
 		reply = true;
 	}
-	else if (/^!oodlecaps(\s+.*)?/i.test(message.content)) {
+	else if (/^!oodlecaps\s+(.*)?/i.test(message.content)) {
 		// pattern still works, as with all of these
 		command = "!oodlecaps";
 		replace = "OODLE";
 		reply = true;
 	}
-	else if (/^!oodletitle(\s+.*)?/i.test(message.content)) {
+	else if (/^!oodletitle\s+(.*)?/i.test(message.content)) {
 		command = "!oodletitle";
 		replace = "Oodle";
 		reply = true;
 	}
-	else if (/^!oodleauto(\s+.*)?/i.test(message.content)) {
+	else if (/^!oodleauto\s+(.*)?/i.test(message.content)) {
 		// this one is more complicated, and does not use the reply function below
 		reply = false;
 		var msg = message.content.replace(/^!oodleauto/i, "");
