@@ -75,7 +75,6 @@ client.on('message', message => {
 	if (reply) {
 		var commandregex = new RegExp("^" + command, "i");
 		var msg = message.content.replace(commandregex, "");
-		console.log(msg);
 		msg = msg.replace(pattern, replacement);
 		if (!/oodle/i.test(msg))
 			message.channel.sendMessage(":warning: Nothing there to oodle. (!oodlehelp for more info)");
