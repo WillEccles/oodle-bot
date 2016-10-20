@@ -108,6 +108,9 @@ client.on('message', message => {
 
 	else if (/^!oodlehelp/i.test(message.content)) {
 		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. <number> must be in the range [2, 100). user running the command must have the \"manage messages\" permission. any pinned messages found will be kept. if run with -f, will delete pinned messages. if run with -q, will not say anything.\n```");
+		if (message.channel.permissionsFor(client.user).hasPermission("MANAGE_MESSAGES")) {
+			message.delete();
+		}
 	}
 
 	if (reply) {
