@@ -64,33 +64,35 @@ client.on('message', message => {
 		} else
 			message.channel.sendMessage(msg.trim());
 	}*/
-	else if (/^!del(messages)?\s+\d+/i.test(message.content)) {
+	// !delmessages -[fq] <number>
+	else if (/^!del(messages)?\s+(-[fq]{1,2}\s+)*\d+(\s+(-[fq]{1,2}\s*)*)?/i.test(message.content)) {
+		var force = false;
+		var quiet = false;
+		var flags = /(-[fq]{1,2})/g;
+		var searchResults;
+		while ((searchResults = flags.exec(message.content)) != null) {
+			if (searchResults[0].includes("q"))
+				quiet = true;
+			if (searchResults[1].includes("f"))
+				force = true;
+		}
+
 		// first, find out the if bot has the ability to delete messages in the first place
 		if (message.channel.permissionsFor(message.author).hasPermission("MANAGE_MESSAGES")) {
 			// the user has the permission, so now we can delete the messages
 			var num = parseInt(/\d+/.exec(message.content));
-			if (num > 500) {
+			if (num >= 100 || num < 2) {
 				// regect any more than 500 messages
-				message.channel.sendMessage(":warning: I will not delete more than 500 messages at a time.");
+				message.channel.sendMessage(`:warning: I can only delete [2, 100) messages. ${num} is ${num>=100?"too many":"too few"}.`);
 			} else {
 				if (message.channel.permissionsFor(client.user).hasPermission("MANAGE_MESSAGES")) {
-					message.channel.sendMessage(`Removing ${num} messages from this channel...`)
+					if (!quiet) message.channel.sendMessage(`Removing ${num} messages from this channel${force?" (including pins)":" (excluding pins)"}...`)
 						.then(msg => {
 							// add 1 to num to account for !delmessages <number>
-							message.channel.fetchMessages({limit: num+1, before: msg.id})
-								.then(messages => {
-									var msgs = messages.array();
-									var pinnedCount = 0;
-									for (var i = 0; i < msgs.length; i++) {
-										if (msgs[i].pinned) {
-											pinnedCount++;
-											msgs.splice(i, 1);
-										}
-									}
-									if (pinnedCount > 0) message.channel.sendMessage(`Kept ${pinnedCount} pinned messages.`);
-									message.channel.bulkDelete(msgs);
-								});
+							deleteMessages(num, message.channel, msg, force, quiet);
 						});
+					else
+						deleteMessages(num, message.channel, message, force, quiet);
 				} else {
 					message.channel.sendMessage(":warning: I don't have permission to do that.");
 				}
@@ -105,7 +107,7 @@ client.on('message', message => {
 	}
 
 	else if (/^!oodlehelp/i.test(message.content)) {
-		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. user running the command must have the \"manage messages\" permission.\n```");
+		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. <number> must be in the range [2, 100). user running the command must have the \"manage messages\" permission. any pinned messages found will be kept. if run with -f, will delete pinned messages. if run with -q, will not say anything.\n```");
 	}
 
 	if (reply) {
@@ -118,6 +120,34 @@ client.on('message', message => {
 			message.channel.sendMessage(msg.trim());
 	}
 });
+
+// num = number of messages to delete [2, 100)
+// channel = the channel in which to delete the messages
+// message = the message to retrieve messages before
+// force = whether or not to delete pinned messages
+// quiet = whether the bot should say anything
+function deleteMessages(num, channel, message, force, quiet) {
+	var lim = num + 1;
+	if (quiet)
+		lim = num;
+	channel.fetchMessages({limit: lim, before: message.id})
+		.then(messages => {
+			var msgs = messages.array();
+			var pinnedCount = 0;
+			if (quiet)
+				msgs.push(message);
+			if (!force)
+				for (var i = 0; i < msgs.length; i++) {
+					if (msgs[i].pinned) {
+						pinnedCount++;
+						msgs.splice(i, 1);
+						i--;
+					}
+				}
+			if (pinnedCount > 0 && !quiet) channel.sendMessage(`Kept ${pinnedCount} pinned message${pinnedCount>1?"s":""}.`);
+			channel.bulkDelete(msgs);
+		});
+}
 
 try {
 	client.login(token);
