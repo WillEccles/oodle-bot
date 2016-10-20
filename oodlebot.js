@@ -64,12 +64,48 @@ client.on('message', message => {
 		} else
 			message.channel.sendMessage(msg.trim());
 	}*/
+	else if (/^!del(messages)?\s+\d+/i.test(message.content)) {
+		// first, find out the if bot has the ability to delete messages in the first place
+		if (message.channel.permissionsFor(message.author).hasPermission("MANAGE_MESSAGES")) {
+			// the user has the permission, so now we can delete the messages
+			var num = parseInt(/\d+/.exec(message.content));
+			if (num > 500) {
+				// regect any more than 500 messages
+				message.channel.sendMessage(":warning: I will not delete more than 500 messages at a time.");
+			} else {
+				if (message.channel.permissionsFor(client.user).hasPermission("MANAGE_MESSAGES")) {
+					message.channel.sendMessage(`Removing ${num} messages from this channel...`)
+						.then(msg => {
+							// add 1 to num to account for !delmessages <number>
+							message.channel.fetchMessages({limit: num+1, before: msg.id})
+								.then(messages => {
+									var msgs = messages.array();
+									var pinnedCount = 0;
+									for (var i = 0; i < msgs.length; i++) {
+										if (msgs[i].pinned) {
+											pinnedCount++;
+											msgs.splice(i, 1);
+										}
+									}
+									if (pinnedCount > 0) message.channel.sendMessage(`Kept ${pinnedCount} pinned messages.`);
+									message.channel.bulkDelete(msgs);
+								});
+						});
+				} else {
+					message.channel.sendMessage(":warning: I don't have permission to do that.");
+				}
+			}
+		} else {
+			message.channel.sendMessage(":warning: You don't have permission to use this command.");
+		}
+	}
+	
 	else if (/^!oodleinvite/i.test(message.content)) {
 		message.author.sendMessage(`Invite link:\nhttps://discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot&permissions=${7168}`);
 	}
 
 	else if (/^!oodlehelp/i.test(message.content)) {
-		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n```");
+		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. user running the command must have the \"manage messages\" permission.\n```");
 	}
 
 	if (reply) {
