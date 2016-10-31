@@ -72,7 +72,7 @@ client.on('message', (message) => {
 		} else if (!hasPermission(message.channel, "SEND_TTS_MESSAGES", message.author)) {
 			message.reply(":warning: You don't have permission to TTS here.");
 		} else
-			message.channel.sendTTSMessage(msg.toLower().replace(/[aeiou]/ig, "oodle"));
+			message.channel.sendTTSMessage(msg.toLowerCase().replace(/[aeiou]/ig, "oodle"));
 	}
 
 	// !delmessages -[fq] <number>
