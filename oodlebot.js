@@ -26,11 +26,8 @@ try {
 	console.error("Error reading config.json.\nYou may need to create this file.\nMake it say:\n   {\"token\":\"yourtokenhere\",\"clientID\":\"clientID\"}");
 }
 
-// c = channel
-// p = permission (i.e. "SEND_MESSAGES")
-// u = user (if not the client user)
-function hasPermission(c, p, u = client.user) {
-	if (c.permissionsFor(u).hasPermission(p))
+function hasPermission(channel, permission, user = client.user) {
+	if (channel.permissionsFor(user).hasPermission(permission))
 		return true;
 	else return false;
 }
@@ -42,8 +39,7 @@ client.on('ready', () => {
 });
 
 client.on('message', (message) => {
-	if (!hasPermission(message.channel, "SEND_MESSAGES")) {
-		message.author.sendMessage(":warning: I don't have permission to send messages in that channel.");
+	if (message.channel.type != "dm" && !hasPermission(message.channel, "SEND_MESSAGES")) {
 		return;
 	}
 	var reply = false;
@@ -57,12 +53,12 @@ client.on('message', (message) => {
 	else if (/^!oodlecaps\s+(.*)?/i.test(message.content)) {
 		// pattern still works, as with all of these
 		command = "!oodlecaps";
-		replace = "OODLE";
+		replacement = "OODLE";
 		reply = true;
 	}
 	else if (/^!oodletitle\s+(.*)?/i.test(message.content)) {
 		command = "!oodletitle";
-		replace = "Oodle";
+		replacement = "Oodle";
 		reply = true;
 	}
 	else if (/^!oodletts\s+(.*)?/i.test(message.content)) {
