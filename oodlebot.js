@@ -29,7 +29,7 @@ try {
 // c = channel
 // p = permission (i.e. "SEND_MESSAGES")
 // u = user (if not the client user)
-var hasPermission(c, p, u = client.user) {
+function hasPermission(c, p, u = client.user) {
 	if (c.permissionsFor(u).hasPermission(p))
 		return true;
 	else return false;
