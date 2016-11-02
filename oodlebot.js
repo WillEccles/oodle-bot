@@ -6,6 +6,12 @@ const client = new discord.Client();
 var token = "";
 var clientID = "";
 
+// the permissions the bot requests when being added to a server
+var perms = 0x00000400 | // READ_MESSAGES
+	0x00000800 | // SEND_MESSAGES
+	0x00002000 | // MANAGE_MESSAGES
+	0x00004000 ; // EMBED_LINKS
+
 // load the config
 try {
 	fs.accessSync("config.json", fs.F_OK);
@@ -114,7 +120,7 @@ client.on('message', (message) => {
 	}
 	
 	else if (/^!oodleinvite/i.test(message.content)) {
-		message.author.sendMessage(`Invite link:\nhttps://discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot&permissions=${7168}`);
+		message.author.sendMessage(`Invite link:\nhttps://discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot&permissions=${perms}`);
 		if (hasPermission(message.channel, "MANAGE_MESSAGES"))
 			message.delete();
 	}
