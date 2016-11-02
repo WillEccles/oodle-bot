@@ -113,6 +113,8 @@ client.on('message', (message) => {
 	
 	else if (/^!oodleinvite/i.test(message.content)) {
 		message.author.sendMessage(`Invite link:\nhttps://discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot&permissions=${7168}`);
+		if (hasPermission(message.channel, "MANAGE_MESSAGES"))
+			message.delete();
 	}
 
 	else if (/^!oodlehelp/i.test(message.content)) {
