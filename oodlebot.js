@@ -27,7 +27,9 @@ try {
 }
 
 function hasPermission(channel, permission, user = client.user) {
-	if (channel.permissionsFor(user).hasPermission(permission))
+	if (channel.type != "dm" && channel.permissionsFor(user).hasPermission(permission))
+		return true;
+	else if (channel.type == "dm")
 		return true;
 	else return false;
 }
@@ -39,7 +41,7 @@ client.on('ready', () => {
 });
 
 client.on('message', (message) => {
-	if (message.channel.type != "dm" && !hasPermission(message.channel, "SEND_MESSAGES")) {
+	if (!hasPermission(message.channel, "SEND_MESSAGES")) {
 		return;
 	}
 	var reply = false;
