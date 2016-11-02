@@ -10,6 +10,7 @@ var clientID = "";
 var perms = 0x00000400 | // READ_MESSAGES
 	0x00000800 | // SEND_MESSAGES
 	0x00002000 | // MANAGE_MESSAGES
+	0x00001000 | // SEND_TTS_MESSAGES
 	0x00004000 ; // EMBED_LINKS
 
 // load the config
