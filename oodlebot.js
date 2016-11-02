@@ -29,8 +29,10 @@ try {
 function hasPermission(channel, permission, user = client.user) {
 	if (channel.type != "dm" && channel.permissionsFor(user).hasPermission(permission))
 		return true;
-	else if (channel.type == "dm")
+	else if (channel.type == "dm" && permission != "MANAGE_MESSAGES")
 		return true;
+	else if (channel.type == "dm" && permission == "MANAGE_MESSAGES")
+		return false;
 	else return false;
 }
 
