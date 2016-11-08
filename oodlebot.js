@@ -172,6 +172,11 @@ function deleteMessages(num, channel, message, force, quiet) {
 		});
 }
 
+client.on('error', (error) => {
+	console.error("Error connecting to discord:\n" + error);
+	console.login(token);
+});
+
 try {
 	client.login(token);
 } catch(e) {
