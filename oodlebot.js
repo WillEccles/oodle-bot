@@ -118,6 +118,10 @@ client.on('message', (message) => {
 		} else
 			message.channel.sendTTSMessage(msg.toLowerCase().replace(/[aeiou]/ig, "oodle"));
 	}
+	
+	else if (/^!coinflip/i.test(message.content)) {
+		message.channel.sendMessage(`**${Math.random() < 0.5 ? "Heads!" : "Tails!"}**`);
+	}
 
 	// !delmessages -[fq] <number>
 	else if (/^!del(messages)?\s+(-[fq]{1,2}\s+)*\d+(\s+(-[fq]{1,2}\s*)*)?/i.test(message.content)) {
@@ -164,7 +168,7 @@ client.on('message', (message) => {
 	}
 
 	else if (/^!oodlehelp/i.test(message.content)) {
-		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. <number> must be in the range [2, 100). user running the command must have the \"manage messages\" permission. any pinned messages found will be kept. if run with -f, will delete pinned messages. if run with -q, will not say anything.\n!oodletts <message>\n  replaces every vowel in the message with 'oodle', lowercases the message, and then TTSs the message.\n```");
+		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. <number> must be in the range [2, 100). user running the command must have the \"manage messages\" permission. any pinned messages found will be kept. if run with -f, will delete pinned messages. if run with -q, will not say anything.\n!oodletts <message>\n  replaces every vowel in the message with 'oodle', lowercases the message, and then TTSs the message.\n!coinflip\n  flips a coin and returns heads or tails.\n```");
 		if (hasPermission(message.channel, "MANAGE_MESSAGES")) {
 			message.delete();
 		}
