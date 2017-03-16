@@ -116,7 +116,7 @@ client.on('message', (message) => {
 		} else if (!hasPermission(message.channel, "SEND_TTS_MESSAGES", message.author)) {
 			message.reply(":warning: You don't have permission to TTS here.");
 		} else
-			message.channel.sendTTSMessage(msg.toLowerCase().replace(/[aeiou]/ig, "oodle"));
+			message.channel.send(msg.toLowerCase().replace(/[aeiou]/ig, "oodle"), {tts: true});
 	}
 	
 	else if (/^!coinflip/i.test(message.content)) {
@@ -210,7 +210,8 @@ function deleteMessages(num, channel, message, force, quiet) {
 				}
 			if (pinnedCount > 0 && !quiet) channel.sendMessage(`Kept ${pinnedCount} pinned message${pinnedCount>1?"s":""}.`);
 			channel.bulkDelete(msgs);
-		});
+		}
+	);
 }
 
 client.on('error', (error) => {
@@ -232,3 +233,10 @@ try {
 } catch(e) {
 	console.error("There was an error logging in. Make sure you specified your token!");
 }
+
+// gracefully handle the control c
+process.on('SIGINT', () => {
+	console.info("Destroying bot and exiting...");
+	client.destroy();
+	process.exit(0);
+});
