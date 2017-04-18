@@ -161,6 +161,11 @@ client.on('message', (message) => {
 		}
 	}
 	
+	else if (/^!blockletters\s+.+/i.test(message.content)) {
+		var content = message.content.replace(/^!blockletters\s+/i, "");
+		message.channel.sendMessage(textToEmotes(content));
+	}
+
 	else if (/^!oodleinvite/i.test(message.content)) {
 		message.author.sendMessage(`Invite link:\nhttps://discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot&permissions=${perms}`);
 		if (hasPermission(message.channel, "MANAGE_MESSAGES"))
@@ -168,7 +173,7 @@ client.on('message', (message) => {
 	}
 
 	else if (/^!oodlehelp/i.test(message.content)) {
-		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. <number> must be in the range [2, 100). user running the command must have the \"manage messages\" permission. any pinned messages found will be kept. if run with -f, will delete pinned messages. if run with -q, will not say anything.\n!oodletts <message>\n  replaces every vowel in the message with 'oodle', lowercases the message, and then TTSs the message.\n!coinflip\n  flips a coin and returns heads or tails.\n```");
+		message.author.sendMessage("Here are the things I can do for you:\n```\n!oodle <message>\n  replaces every vowel in <message> with 'oodle'\n!oodlecaps <MESSAGE>\n  replaces every vowel in <MESSAGE> with 'OODLE'\n!oodletitle <Message>\n  replaces every vowel in <Message> with 'Oodle'\n!oodleinvite\n  messages you the invite link for the bot\n!delmessages <number> or !del <number>\n  deletes <number> messages. also deletes your !del or !delnum message. <number> must be in the range [2, 100). user running the command must have the \"manage messages\" permission. any pinned messages found will be kept. if run with -f, will delete pinned messages. if run with -q, will not say anything.\n!oodletts <message>\n  replaces every vowel in the message with 'oodle', lowercases the message, and then TTSs the message.\n!coinflip\n  flips a coin and returns heads or tails.\n!blockletters <message>\n  replaces all the characters in your message with block letters\n```");
 		if (hasPermission(message.channel, "MANAGE_MESSAGES")) {
 			message.delete();
 		}
@@ -184,6 +189,69 @@ client.on('message', (message) => {
 			message.channel.sendMessage(msg.trim());
 	}
 });
+
+// turns text into emotes using the :regional_indicator: emotes etc
+function textToEmotes(t) {
+	var text = t.toLowerCase();
+	var output = "";
+	for (var i = 0; i < text.length; i++) {
+		if (/[a-z]/.test(text[i])) {
+			output += ":regional_indicator_" + text[i] + ": ";
+		} else if (/\s/.test(text[i])) {
+			output += "  ";
+		} else if (/[!?#*$]/.test(text[i])) {
+			switch (text[i]) {
+				case '!':
+					output += ":exclamation: ";
+					break;
+				case '?':
+					output += ":question: ";
+					break;
+				case '#':
+					output += ":hash: ";
+					break;
+				case '*':
+					output += ":asterisk: ";
+					break;
+				case '$':
+					output += ":heavy_dollar_sign: ";
+					break;
+			}
+		} else if (/[0-9]/.test(text[i])) {
+			output += `:${numText(text[i])}: `;
+		} else {
+			output += text[i];
+		}
+	}
+	return output;
+}
+
+function numText(num) {
+	switch(num) {
+		case '0':
+			return "zero";
+		case '1':
+			return "one";
+		case '2':
+			return "two";
+		case '3':
+			return "three";
+		case '4':
+			return "four";
+		case '5':
+			return "five";
+		case '6':
+			return "six";
+		case '7':
+			return "seven";
+		case '8':
+			return "eight";
+		case '9':
+			return "nine";
+		default:
+			return num;
+	}
+}
 
 // num = number of messages to delete [2, 100)
 // channel = the channel in which to delete the messages
