@@ -294,7 +294,6 @@ client.on('warn', (warning) => {
 
 client.on('disconnect', () => {
 	console.info("Disconnected from Discord, attempting to log in...");
-	client.login(token);
 });
 
 try {
