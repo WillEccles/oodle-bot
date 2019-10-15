@@ -227,30 +227,32 @@ function textToEmotes(t) {
 }
 
 function numText(num) {
-	switch(num) {
-		case '0':
-			return "zero";
-		case '1':
-			return "one";
-		case '2':
-			return "two";
-		case '3':
-			return "three";
-		case '4':
-			return "four";
-		case '5':
-			return "five";
-		case '6':
-			return "six";
-		case '7':
-			return "seven";
-		case '8':
-			return "eight";
-		case '9':
-			return "nine";
-		default:
-			return num;
-	}
+	text = ["zero","one","two","three","four","five","six","seven","eight","nine"];
+	return (text[parseInt(num)] ? text[parseInt(num)]: num);
+	// switch(num) {
+	// 	case '0':
+	// 		return "zero";
+	// 	case '1':
+	// 		return "one";
+	// 	case '2':
+	// 		return "two";
+	// 	case '3':
+	// 		return "three";
+	// 	case '4':
+	// 		return "four";
+	// 	case '5':
+	// 		return "five";
+	// 	case '6':
+	// 		return "six";
+	// 	case '7':
+	// 		return "seven";
+	// 	case '8':
+	// 		return "eight";
+	// 	case '9':
+	// 		return "nine";
+	// 	default:
+	// 		return num;
+	// }
 }
 
 // num = number of messages to delete [2, 100)
